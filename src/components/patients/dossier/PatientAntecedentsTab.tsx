@@ -30,6 +30,7 @@ import AntecedentFormModal, {
 } from './AntecedentFormModal';
 import MemoModal from './MemoModal';
 import PatientAllergyManager from '@/components/patients/PatientAllergyManager';
+import { LifestyleSection } from './antecedents';
 import {
   AlertDialog,
   AlertDialogAction,
@@ -145,6 +146,11 @@ const PatientAntecedentsTab: React.FC = () => {
       {/* Allergies Section - Dedicated Manager with real Supabase data */}
       <div className="mb-6">
         <PatientAllergyManager patientId={patient.id} />
+      </div>
+
+      {/* Lifestyle Section - Mode de vie */}
+      <div className="mb-6">
+        <LifestyleSection patientId={patient.id} />
       </div>
 
       {/* Main Sections List */}
