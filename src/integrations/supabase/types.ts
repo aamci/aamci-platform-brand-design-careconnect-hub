@@ -922,6 +922,54 @@ export type Database = {
           },
         ]
       }
+      medical_terminology: {
+        Row: {
+          category: string | null
+          code: string
+          created_at: string
+          display: string
+          display_normalized: string | null
+          id: string
+          is_frv: boolean | null
+          metadata: Json | null
+          parent_code: string | null
+          search_vector: unknown
+          specialty_tags: string[] | null
+          synonyms: string[] | null
+          system: string
+        }
+        Insert: {
+          category?: string | null
+          code: string
+          created_at?: string
+          display: string
+          display_normalized?: string | null
+          id?: string
+          is_frv?: boolean | null
+          metadata?: Json | null
+          parent_code?: string | null
+          search_vector?: unknown
+          specialty_tags?: string[] | null
+          synonyms?: string[] | null
+          system: string
+        }
+        Update: {
+          category?: string | null
+          code?: string
+          created_at?: string
+          display?: string
+          display_normalized?: string | null
+          id?: string
+          is_frv?: boolean | null
+          metadata?: Json | null
+          parent_code?: string | null
+          search_vector?: unknown
+          specialty_tags?: string[] | null
+          synonyms?: string[] | null
+          system?: string
+        }
+        Relationships: []
+      }
       messages: {
         Row: {
           attachments: Json | null
@@ -1368,48 +1416,78 @@ export type Database = {
       patient_allergies: {
         Row: {
           allergen_code: string
+          allergy_test_date: string | null
+          allergy_test_result: string | null
+          allergy_test_type: string | null
           confirmed_by: string | null
           confirmed_date: string | null
           created_at: string
           created_by: string | null
+          cross_reactive_allergens: string[] | null
+          desensitization_end_date: string | null
+          desensitization_protocol: string | null
+          desensitization_start_date: string | null
           id: string
           is_active: boolean
+          is_cross_reactive: boolean | null
+          is_desensitization_ongoing: boolean | null
           notes: string | null
           patient_id: string
           reaction_description: string | null
           severity: Database["public"]["Enums"]["antecedent_severity"]
           source: string
           updated_at: string
+          updated_by: string | null
         }
         Insert: {
           allergen_code: string
+          allergy_test_date?: string | null
+          allergy_test_result?: string | null
+          allergy_test_type?: string | null
           confirmed_by?: string | null
           confirmed_date?: string | null
           created_at?: string
           created_by?: string | null
+          cross_reactive_allergens?: string[] | null
+          desensitization_end_date?: string | null
+          desensitization_protocol?: string | null
+          desensitization_start_date?: string | null
           id?: string
           is_active?: boolean
+          is_cross_reactive?: boolean | null
+          is_desensitization_ongoing?: boolean | null
           notes?: string | null
           patient_id: string
           reaction_description?: string | null
           severity?: Database["public"]["Enums"]["antecedent_severity"]
           source?: string
           updated_at?: string
+          updated_by?: string | null
         }
         Update: {
           allergen_code?: string
+          allergy_test_date?: string | null
+          allergy_test_result?: string | null
+          allergy_test_type?: string | null
           confirmed_by?: string | null
           confirmed_date?: string | null
           created_at?: string
           created_by?: string | null
+          cross_reactive_allergens?: string[] | null
+          desensitization_end_date?: string | null
+          desensitization_protocol?: string | null
+          desensitization_start_date?: string | null
           id?: string
           is_active?: boolean
+          is_cross_reactive?: boolean | null
+          is_desensitization_ongoing?: boolean | null
           notes?: string | null
           patient_id?: string
           reaction_description?: string | null
           severity?: Database["public"]["Enums"]["antecedent_severity"]
           source?: string
           updated_at?: string
+          updated_by?: string | null
         }
         Relationships: [
           {
@@ -1437,43 +1515,439 @@ export type Database = {
       }
       patient_antecedents: {
         Row: {
+          ald_end_date: string | null
+          ald_start_date: string | null
           category: Database["public"]["Enums"]["antecedent_category"]
           created_at: string
+          created_by: string | null
           description: string | null
+          family_member_age_at_diagnosis: number | null
           id: string
           is_active: boolean | null
+          is_ald: boolean | null
+          is_pinned: boolean | null
           notes: string | null
           occurrence_date: string | null
           patient_id: string
+          pin_order: number | null
+          related_family_member: string | null
           severity: Database["public"]["Enums"]["antecedent_severity"] | null
+          source: string | null
+          status: string | null
+          terminology_code: string | null
+          terminology_system: string | null
           title: string
           updated_at: string
+          updated_by: string | null
         }
         Insert: {
+          ald_end_date?: string | null
+          ald_start_date?: string | null
           category: Database["public"]["Enums"]["antecedent_category"]
           created_at?: string
+          created_by?: string | null
           description?: string | null
+          family_member_age_at_diagnosis?: number | null
           id?: string
           is_active?: boolean | null
+          is_ald?: boolean | null
+          is_pinned?: boolean | null
           notes?: string | null
           occurrence_date?: string | null
           patient_id: string
+          pin_order?: number | null
+          related_family_member?: string | null
           severity?: Database["public"]["Enums"]["antecedent_severity"] | null
+          source?: string | null
+          status?: string | null
+          terminology_code?: string | null
+          terminology_system?: string | null
           title: string
           updated_at?: string
+          updated_by?: string | null
         }
         Update: {
+          ald_end_date?: string | null
+          ald_start_date?: string | null
           category?: Database["public"]["Enums"]["antecedent_category"]
           created_at?: string
+          created_by?: string | null
           description?: string | null
+          family_member_age_at_diagnosis?: number | null
           id?: string
           is_active?: boolean | null
+          is_ald?: boolean | null
+          is_pinned?: boolean | null
           notes?: string | null
           occurrence_date?: string | null
           patient_id?: string
+          pin_order?: number | null
+          related_family_member?: string | null
           severity?: Database["public"]["Enums"]["antecedent_severity"] | null
+          source?: string | null
+          status?: string | null
+          terminology_code?: string | null
+          terminology_system?: string | null
           title?: string
           updated_at?: string
+          updated_by?: string | null
+        }
+        Relationships: []
+      }
+      patient_devices: {
+        Row: {
+          alerts: string[] | null
+          body_location: string | null
+          created_at: string
+          created_by: string | null
+          device_model: string | null
+          device_name: string
+          device_serial_number: string | null
+          device_type: string
+          follow_up_frequency: string | null
+          id: string
+          implant_date: string | null
+          is_active: boolean | null
+          manufacturer: string | null
+          mri_compatible: boolean | null
+          next_follow_up_date: string | null
+          notes: string | null
+          patient_id: string
+          removal_date: string | null
+          removal_reason: string | null
+          source: string | null
+          updated_at: string
+          updated_by: string | null
+        }
+        Insert: {
+          alerts?: string[] | null
+          body_location?: string | null
+          created_at?: string
+          created_by?: string | null
+          device_model?: string | null
+          device_name: string
+          device_serial_number?: string | null
+          device_type: string
+          follow_up_frequency?: string | null
+          id?: string
+          implant_date?: string | null
+          is_active?: boolean | null
+          manufacturer?: string | null
+          mri_compatible?: boolean | null
+          next_follow_up_date?: string | null
+          notes?: string | null
+          patient_id: string
+          removal_date?: string | null
+          removal_reason?: string | null
+          source?: string | null
+          updated_at?: string
+          updated_by?: string | null
+        }
+        Update: {
+          alerts?: string[] | null
+          body_location?: string | null
+          created_at?: string
+          created_by?: string | null
+          device_model?: string | null
+          device_name?: string
+          device_serial_number?: string | null
+          device_type?: string
+          follow_up_frequency?: string | null
+          id?: string
+          implant_date?: string | null
+          is_active?: boolean | null
+          manufacturer?: string | null
+          mri_compatible?: boolean | null
+          next_follow_up_date?: string | null
+          notes?: string | null
+          patient_id?: string
+          removal_date?: string | null
+          removal_reason?: string | null
+          source?: string | null
+          updated_at?: string
+          updated_by?: string | null
+        }
+        Relationships: []
+      }
+      patient_family_history: {
+        Row: {
+          age_at_death: number | null
+          age_at_diagnosis: number | null
+          condition_title: string
+          created_at: string
+          created_by: string | null
+          id: string
+          is_active: boolean | null
+          is_cause_of_death: boolean | null
+          notes: string | null
+          patient_id: string
+          relative_gender: string | null
+          relative_type: string
+          source: string | null
+          terminology_code: string | null
+          terminology_system: string | null
+          updated_at: string
+          year_of_diagnosis: number | null
+        }
+        Insert: {
+          age_at_death?: number | null
+          age_at_diagnosis?: number | null
+          condition_title: string
+          created_at?: string
+          created_by?: string | null
+          id?: string
+          is_active?: boolean | null
+          is_cause_of_death?: boolean | null
+          notes?: string | null
+          patient_id: string
+          relative_gender?: string | null
+          relative_type: string
+          source?: string | null
+          terminology_code?: string | null
+          terminology_system?: string | null
+          updated_at?: string
+          year_of_diagnosis?: number | null
+        }
+        Update: {
+          age_at_death?: number | null
+          age_at_diagnosis?: number | null
+          condition_title?: string
+          created_at?: string
+          created_by?: string | null
+          id?: string
+          is_active?: boolean | null
+          is_cause_of_death?: boolean | null
+          notes?: string | null
+          patient_id?: string
+          relative_gender?: string | null
+          relative_type?: string
+          source?: string | null
+          terminology_code?: string | null
+          terminology_system?: string | null
+          updated_at?: string
+          year_of_diagnosis?: number | null
+        }
+        Relationships: []
+      }
+      patient_gyneco_obstetric: {
+        Row: {
+          breast_pathology_history: string | null
+          cesarean_count: number | null
+          contraception_method: string | null
+          contraception_start_date: string | null
+          created_at: string
+          created_by: string | null
+          cycle_duration_days: number | null
+          cycle_regularity: string | null
+          ectopic_pregnancies: number | null
+          gravidity: number | null
+          hrt_start_date: string | null
+          hrt_type: string | null
+          hrt_use: boolean | null
+          id: string
+          is_menopausal: boolean | null
+          last_mammogram_date: string | null
+          last_pap_smear_date: string | null
+          last_period_date: string | null
+          living_children: number | null
+          medical_terminations: number | null
+          menarche_age: number | null
+          menopause_age: number | null
+          miscarriages: number | null
+          notes: string | null
+          ovarian_pathology_history: string | null
+          parity: number | null
+          patient_id: string
+          source: string | null
+          updated_at: string
+          updated_by: string | null
+          uterine_pathology_history: string | null
+          voluntary_terminations: number | null
+        }
+        Insert: {
+          breast_pathology_history?: string | null
+          cesarean_count?: number | null
+          contraception_method?: string | null
+          contraception_start_date?: string | null
+          created_at?: string
+          created_by?: string | null
+          cycle_duration_days?: number | null
+          cycle_regularity?: string | null
+          ectopic_pregnancies?: number | null
+          gravidity?: number | null
+          hrt_start_date?: string | null
+          hrt_type?: string | null
+          hrt_use?: boolean | null
+          id?: string
+          is_menopausal?: boolean | null
+          last_mammogram_date?: string | null
+          last_pap_smear_date?: string | null
+          last_period_date?: string | null
+          living_children?: number | null
+          medical_terminations?: number | null
+          menarche_age?: number | null
+          menopause_age?: number | null
+          miscarriages?: number | null
+          notes?: string | null
+          ovarian_pathology_history?: string | null
+          parity?: number | null
+          patient_id: string
+          source?: string | null
+          updated_at?: string
+          updated_by?: string | null
+          uterine_pathology_history?: string | null
+          voluntary_terminations?: number | null
+        }
+        Update: {
+          breast_pathology_history?: string | null
+          cesarean_count?: number | null
+          contraception_method?: string | null
+          contraception_start_date?: string | null
+          created_at?: string
+          created_by?: string | null
+          cycle_duration_days?: number | null
+          cycle_regularity?: string | null
+          ectopic_pregnancies?: number | null
+          gravidity?: number | null
+          hrt_start_date?: string | null
+          hrt_type?: string | null
+          hrt_use?: boolean | null
+          id?: string
+          is_menopausal?: boolean | null
+          last_mammogram_date?: string | null
+          last_pap_smear_date?: string | null
+          last_period_date?: string | null
+          living_children?: number | null
+          medical_terminations?: number | null
+          menarche_age?: number | null
+          menopause_age?: number | null
+          miscarriages?: number | null
+          notes?: string | null
+          ovarian_pathology_history?: string | null
+          parity?: number | null
+          patient_id?: string
+          source?: string | null
+          updated_at?: string
+          updated_by?: string | null
+          uterine_pathology_history?: string | null
+          voluntary_terminations?: number | null
+        }
+        Relationships: []
+      }
+      patient_lifestyle: {
+        Row: {
+          activity_duration_minutes: number | null
+          activity_frequency_per_week: number | null
+          activity_intensity: string | null
+          activity_types: string[] | null
+          addiction_method: string | null
+          addiction_substance: string | null
+          addiction_substitution: boolean | null
+          addiction_substitution_type: string | null
+          alcohol_binge_drinking: boolean | null
+          alcohol_glasses_per_week: number | null
+          alcohol_type: string | null
+          category: string
+          comment: string | null
+          created_at: string
+          created_by: string | null
+          description: string | null
+          diet_restrictions: string[] | null
+          diet_type: string | null
+          id: string
+          is_sedentary: boolean | null
+          level: string | null
+          patient_id: string
+          recorded_date: string | null
+          sleep_disorders: string[] | null
+          sleep_hours_per_night: number | null
+          sleep_quality: string | null
+          source: string | null
+          status: string | null
+          tobacco_pack_years: number | null
+          tobacco_quantity_per_day: number | null
+          tobacco_quit_attempts: number | null
+          tobacco_start_age: number | null
+          tobacco_stop_date: string | null
+          tobacco_type: string | null
+          updated_at: string
+          updated_by: string | null
+        }
+        Insert: {
+          activity_duration_minutes?: number | null
+          activity_frequency_per_week?: number | null
+          activity_intensity?: string | null
+          activity_types?: string[] | null
+          addiction_method?: string | null
+          addiction_substance?: string | null
+          addiction_substitution?: boolean | null
+          addiction_substitution_type?: string | null
+          alcohol_binge_drinking?: boolean | null
+          alcohol_glasses_per_week?: number | null
+          alcohol_type?: string | null
+          category: string
+          comment?: string | null
+          created_at?: string
+          created_by?: string | null
+          description?: string | null
+          diet_restrictions?: string[] | null
+          diet_type?: string | null
+          id?: string
+          is_sedentary?: boolean | null
+          level?: string | null
+          patient_id: string
+          recorded_date?: string | null
+          sleep_disorders?: string[] | null
+          sleep_hours_per_night?: number | null
+          sleep_quality?: string | null
+          source?: string | null
+          status?: string | null
+          tobacco_pack_years?: number | null
+          tobacco_quantity_per_day?: number | null
+          tobacco_quit_attempts?: number | null
+          tobacco_start_age?: number | null
+          tobacco_stop_date?: string | null
+          tobacco_type?: string | null
+          updated_at?: string
+          updated_by?: string | null
+        }
+        Update: {
+          activity_duration_minutes?: number | null
+          activity_frequency_per_week?: number | null
+          activity_intensity?: string | null
+          activity_types?: string[] | null
+          addiction_method?: string | null
+          addiction_substance?: string | null
+          addiction_substitution?: boolean | null
+          addiction_substitution_type?: string | null
+          alcohol_binge_drinking?: boolean | null
+          alcohol_glasses_per_week?: number | null
+          alcohol_type?: string | null
+          category?: string
+          comment?: string | null
+          created_at?: string
+          created_by?: string | null
+          description?: string | null
+          diet_restrictions?: string[] | null
+          diet_type?: string | null
+          id?: string
+          is_sedentary?: boolean | null
+          level?: string | null
+          patient_id?: string
+          recorded_date?: string | null
+          sleep_disorders?: string[] | null
+          sleep_hours_per_night?: number | null
+          sleep_quality?: string | null
+          source?: string | null
+          status?: string | null
+          tobacco_pack_years?: number | null
+          tobacco_quantity_per_day?: number | null
+          tobacco_quit_attempts?: number | null
+          tobacco_start_age?: number | null
+          tobacco_stop_date?: string | null
+          tobacco_type?: string | null
+          updated_at?: string
+          updated_by?: string | null
         }
         Relationships: []
       }
@@ -1498,6 +1972,78 @@ export type Database = {
           id?: string
           patient_id?: string
           updated_at?: string
+        }
+        Relationships: []
+      }
+      patient_perinatal: {
+        Row: {
+          apgar_10min: number | null
+          apgar_1min: number | null
+          apgar_5min: number | null
+          birth_context: string | null
+          birth_weight_grams: number | null
+          breastfeeding_duration_months: number | null
+          complications: string[] | null
+          created_at: string
+          created_by: string | null
+          delivery_type: string | null
+          gestational_age_days: number | null
+          gestational_age_weeks: number | null
+          id: string
+          is_premature: boolean | null
+          neonatal_hospitalization: boolean | null
+          neonatal_hospitalization_days: number | null
+          notes: string | null
+          patient_id: string
+          source: string | null
+          updated_at: string
+          updated_by: string | null
+        }
+        Insert: {
+          apgar_10min?: number | null
+          apgar_1min?: number | null
+          apgar_5min?: number | null
+          birth_context?: string | null
+          birth_weight_grams?: number | null
+          breastfeeding_duration_months?: number | null
+          complications?: string[] | null
+          created_at?: string
+          created_by?: string | null
+          delivery_type?: string | null
+          gestational_age_days?: number | null
+          gestational_age_weeks?: number | null
+          id?: string
+          is_premature?: boolean | null
+          neonatal_hospitalization?: boolean | null
+          neonatal_hospitalization_days?: number | null
+          notes?: string | null
+          patient_id: string
+          source?: string | null
+          updated_at?: string
+          updated_by?: string | null
+        }
+        Update: {
+          apgar_10min?: number | null
+          apgar_1min?: number | null
+          apgar_5min?: number | null
+          birth_context?: string | null
+          birth_weight_grams?: number | null
+          breastfeeding_duration_months?: number | null
+          complications?: string[] | null
+          created_at?: string
+          created_by?: string | null
+          delivery_type?: string | null
+          gestational_age_days?: number | null
+          gestational_age_weeks?: number | null
+          id?: string
+          is_premature?: boolean | null
+          neonatal_hospitalization?: boolean | null
+          neonatal_hospitalization_days?: number | null
+          notes?: string | null
+          patient_id?: string
+          source?: string | null
+          updated_at?: string
+          updated_by?: string | null
         }
         Relationships: []
       }
