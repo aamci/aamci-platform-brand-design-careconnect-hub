@@ -8,15 +8,14 @@ import {
   Heart,
   Stethoscope,
   Scissors,
-  AlertTriangle,
-  Users,
-  Cigarette,
   ChevronRight,
   FileText,
   Trash2,
   Loader2,
   Calendar,
-  AlertCircle
+  AlertCircle,
+  Star,
+  GripVertical
 } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
@@ -30,7 +29,14 @@ import AntecedentFormModal, {
 } from './AntecedentFormModal';
 import MemoModal from './MemoModal';
 import PatientAllergyManager from '@/components/patients/PatientAllergyManager';
-import { LifestyleSection } from './antecedents';
+import {
+  LifestyleSection,
+  PerinatalSection,
+  DevicesSection,
+  FamilyHistorySection,
+  GynecoObstetricSection,
+  CardiovascularRiskSection,
+} from './antecedents';
 import {
   AlertDialog,
   AlertDialogAction,
@@ -56,9 +62,6 @@ const sections: AntecedentSection[] = [
   { id: 'medical', title: 'Antécédents médicaux', icon: Stethoscope },
   { id: 'cardiovascular', title: 'Appareil cardiovasculaire', icon: Heart },
   { id: 'surgical', title: 'Antécédents chirurgicaux', icon: Scissors },
-  // Note: allergies sont gérées par PatientAllergyManager maintenant
-  { id: 'family', title: 'Antécédents familiaux', icon: Users },
-  { id: 'lifestyle', title: 'Mode de vie', icon: Cigarette },
 ];
 
 const severityConfig: Record<string, { label: string; className: string }> = {
@@ -125,164 +128,186 @@ const PatientAntecedentsTab: React.FC = () => {
 
   if (isLoading) {
     return (
-      <div className="p-4 sm:p-6 max-w-4xl mx-auto space-y-6">
+      <div className="p-4 sm:p-6 max-w-5xl mx-auto space-y-6">
         <Skeleton className="h-8 w-64" />
-        <div className="space-y-2">
-          {[1, 2, 3, 4, 5, 6].map((i) => (
-            <Skeleton key={i} className="h-16 w-full" />
-          ))}
+        <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
+          <div className="lg:col-span-2 space-y-4">
+            {[1, 2, 3, 4].map((i) => (
+              <Skeleton key={i} className="h-24 w-full" />
+            ))}
+          </div>
+          <div className="space-y-4">
+            <Skeleton className="h-32 w-full" />
+            <Skeleton className="h-32 w-full" />
+          </div>
         </div>
-        <Skeleton className="h-32 w-full" />
       </div>
     );
   }
 
   return (
-    <div className="p-4 sm:p-6 max-w-4xl mx-auto">
+    <div className="p-4 sm:p-6 max-w-5xl mx-auto">
       <div className="flex items-center justify-between mb-6">
         <h2 className="text-xl font-bold text-foreground">Antécédents et mode de vie</h2>
       </div>
 
-      {/* Allergies Section - Dedicated Manager with real Supabase data */}
-      <div className="mb-6">
-        <PatientAllergyManager patientId={patient.id} />
-      </div>
+      <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
+        {/* Main Column */}
+        <div className="lg:col-span-2 space-y-6">
+          {/* Perinatal Section (conditional) */}
+          <PerinatalSection patientId={patient.id} dateOfBirth={patient.date_of_birth} />
 
-      {/* Lifestyle Section - Mode de vie */}
-      <div className="mb-6">
-        <LifestyleSection patientId={patient.id} />
-      </div>
+          {/* Allergies Section */}
+          <PatientAllergyManager patientId={patient.id} />
 
-      {/* Main Sections List */}
-      <Card className="mb-6">
-        <CardContent className="p-0">
-          {sections.map((section) => {
-            const items = getAntecedentsByCategory(section.id);
-            const isExpanded = expandedSection === section.id;
-            const Icon = section.icon;
+          {/* Lifestyle Section */}
+          <LifestyleSection patientId={patient.id} />
 
-            return (
-              <div key={section.id} className="border-b border-border last:border-b-0">
-                {/* Section Header */}
-                <div
-                  className={cn(
-                    'flex items-center justify-between p-4 cursor-pointer transition-colors',
-                    'hover:bg-muted/30 group',
-                    isExpanded && 'bg-muted/20'
-                  )}
-                  onClick={() => toggleSection(section.id)}
-                >
-                  <div className="flex items-center gap-3 flex-1 min-w-0">
-                    <div className="h-9 w-9 rounded-lg bg-muted flex items-center justify-center flex-shrink-0">
-                      <Icon className="h-4 w-4 text-muted-foreground" />
-                    </div>
-                    <div className="flex-1 min-w-0">
-                      <h3 className="text-sm font-medium text-foreground">{section.title}</h3>
-                      {items.length > 0 ? (
-                        <p className="text-xs text-primary font-medium mt-0.5">
-                          {items.length} élément{items.length > 1 ? 's' : ''}
-                        </p>
-                      ) : (
-                        <p className="text-xs text-muted-foreground/70 italic mt-0.5">
-                          Aucune donnée
-                        </p>
-                      )}
-                    </div>
-                  </div>
+          {/* Family History Section */}
+          <FamilyHistorySection patientId={patient.id} />
 
-                  <div className="flex items-center gap-2">
-                    <Button
-                      variant="ghost"
-                      size="sm"
-                      className="h-8 gap-1.5 text-xs font-medium opacity-0 group-hover:opacity-100 transition-opacity"
-                      onClick={(e) => {
-                        e.stopPropagation();
-                        handleOpenForm(section.id);
-                      }}
-                    >
-                      <Plus className="h-3.5 w-3.5" />
-                      <span className="hidden sm:inline">Ajouter</span>
-                    </Button>
-                    <ChevronRight 
+          {/* Medical Devices Section */}
+          <DevicesSection patientId={patient.id} />
+
+          {/* Gyneco-Obstetric Section (conditional) */}
+          <GynecoObstetricSection patientId={patient.id} gender={patient.gender} />
+
+          {/* Medical/Surgical Antecedents */}
+          <Card>
+            <CardContent className="p-0">
+              {sections.map((section) => {
+                const items = getAntecedentsByCategory(section.id);
+                const isExpanded = expandedSection === section.id;
+                const Icon = section.icon;
+
+                return (
+                  <div key={section.id} className="border-b border-border last:border-b-0">
+                    <div
                       className={cn(
-                        'h-4 w-4 text-muted-foreground transition-transform',
-                        isExpanded && 'rotate-90'
-                      )} 
-                    />
-                  </div>
-                </div>
+                        'flex items-center justify-between p-4 cursor-pointer transition-colors',
+                        'hover:bg-muted/30 group',
+                        isExpanded && 'bg-muted/20'
+                      )}
+                      onClick={() => toggleSection(section.id)}
+                    >
+                      <div className="flex items-center gap-3 flex-1 min-w-0">
+                        <div className="h-9 w-9 rounded-lg bg-muted flex items-center justify-center flex-shrink-0">
+                          <Icon className="h-4 w-4 text-muted-foreground" />
+                        </div>
+                        <div className="flex-1 min-w-0">
+                          <h3 className="text-sm font-medium text-foreground">{section.title}</h3>
+                          {items.length > 0 ? (
+                            <p className="text-xs text-primary font-medium mt-0.5">
+                              {items.length} élément{items.length > 1 ? 's' : ''}
+                            </p>
+                          ) : (
+                            <p className="text-xs text-muted-foreground/70 italic mt-0.5">
+                              Aucune donnée
+                            </p>
+                          )}
+                        </div>
+                      </div>
 
-                {/* Expanded Content */}
-                {isExpanded && (
-                  <div className="px-4 pb-4 space-y-2">
-                    {items.length > 0 ? (
-                      items.map((item) => (
-                        <AntecedentItem
-                          key={item.id}
-                          antecedent={item}
-                          onDelete={() => handleDeleteClick(item)}
-                        />
-                      ))
-                    ) : (
-                      <div className="flex flex-col items-center py-6 text-center">
-                        <AlertCircle className="h-8 w-8 text-muted-foreground/30 mb-2" />
-                        <p className="text-sm text-muted-foreground mb-3">
-                          Aucun élément enregistré
-                        </p>
-                        <Button 
-                          variant="outline" 
-                          size="sm" 
-                          className="gap-1.5"
-                          onClick={() => handleOpenForm(section.id)}
+                      <div className="flex items-center gap-2">
+                        <Button
+                          variant="ghost"
+                          size="sm"
+                          className="h-8 gap-1.5 text-xs font-medium opacity-0 group-hover:opacity-100 transition-opacity"
+                          onClick={(e) => {
+                            e.stopPropagation();
+                            handleOpenForm(section.id);
+                          }}
                         >
-                          <Plus className="h-4 w-4" />
-                          Ajouter un élément
+                          <Plus className="h-3.5 w-3.5" />
+                          <span className="hidden sm:inline">Ajouter</span>
                         </Button>
+                        <ChevronRight 
+                          className={cn(
+                            'h-4 w-4 text-muted-foreground transition-transform',
+                            isExpanded && 'rotate-90'
+                          )} 
+                        />
+                      </div>
+                    </div>
+
+                    {isExpanded && (
+                      <div className="px-4 pb-4 space-y-2">
+                        {items.length > 0 ? (
+                          items.map((item) => (
+                            <AntecedentItem
+                              key={item.id}
+                              antecedent={item}
+                              onDelete={() => handleDeleteClick(item)}
+                            />
+                          ))
+                        ) : (
+                          <div className="flex flex-col items-center py-6 text-center">
+                            <AlertCircle className="h-8 w-8 text-muted-foreground/30 mb-2" />
+                            <p className="text-sm text-muted-foreground mb-3">
+                              Aucun élément enregistré
+                            </p>
+                            <Button 
+                              variant="outline" 
+                              size="sm" 
+                              className="gap-1.5"
+                              onClick={() => handleOpenForm(section.id)}
+                            >
+                              <Plus className="h-4 w-4" />
+                              Ajouter un élément
+                            </Button>
+                          </div>
+                        )}
                       </div>
                     )}
                   </div>
+                );
+              })}
+            </CardContent>
+          </Card>
+        </div>
+
+        {/* Sidebar Column */}
+        <div className="space-y-6">
+          {/* Cardiovascular Risk Factors */}
+          <CardiovascularRiskSection patientId={patient.id} />
+
+          {/* Memo Section */}
+          <Card>
+            <CardHeader className="pb-3">
+              <div className="flex items-center justify-between">
+                <CardTitle className="text-base font-semibold flex items-center gap-2">
+                  <FileText className="h-4 w-4 text-primary" />
+                  Mémo
+                </CardTitle>
+                <Button 
+                  variant="outline" 
+                  size="sm" 
+                  className="gap-1.5"
+                  onClick={() => setMemoModalOpen(true)}
+                >
+                  Ouvrir
+                  <ChevronRight className="h-3.5 w-3.5" />
+                </Button>
+              </div>
+            </CardHeader>
+            <CardContent className="pt-0">
+              <div className="p-4 rounded-lg bg-muted/30 border border-border min-h-[80px]">
+                {memo && memo.content ? (
+                  <p className="text-sm text-foreground whitespace-pre-wrap line-clamp-4">
+                    {memo.content}
+                  </p>
+                ) : (
+                  <p className="text-sm text-muted-foreground italic">
+                    Aucun mémo. Cliquez sur "Ouvrir" pour ajouter des notes.
+                  </p>
                 )}
               </div>
-            );
-          })}
-        </CardContent>
-      </Card>
+            </CardContent>
+          </Card>
+        </div>
+      </div>
 
-      {/* Memo Section */}
-      <Card>
-        <CardHeader className="pb-3">
-          <div className="flex items-center justify-between">
-            <CardTitle className="text-base font-semibold flex items-center gap-2">
-              <FileText className="h-4 w-4 text-primary" />
-              Mémo
-            </CardTitle>
-            <Button 
-              variant="outline" 
-              size="sm" 
-              className="gap-1.5"
-              onClick={() => setMemoModalOpen(true)}
-            >
-              Ouvrir
-              <ChevronRight className="h-3.5 w-3.5" />
-            </Button>
-          </div>
-        </CardHeader>
-        <CardContent className="pt-0">
-          <div className="p-4 rounded-lg bg-muted/30 border border-border min-h-[80px]">
-            {memo && memo.content ? (
-              <p className="text-sm text-foreground whitespace-pre-wrap line-clamp-4">
-                {memo.content}
-              </p>
-            ) : (
-              <p className="text-sm text-muted-foreground italic">
-                Aucun mémo pour ce patient. Cliquez sur "Ouvrir" pour ajouter des notes importantes.
-              </p>
-            )}
-          </div>
-        </CardContent>
-      </Card>
-
-      {/* Form Modal */}
+      {/* Modals */}
       <AntecedentFormModal
         isOpen={formModalOpen}
         onClose={() => setFormModalOpen(false)}
@@ -291,7 +316,6 @@ const PatientAntecedentsTab: React.FC = () => {
         isLoading={isSaving}
       />
 
-      {/* Memo Modal */}
       <MemoModal
         isOpen={memoModalOpen}
         onClose={() => setMemoModalOpen(false)}
@@ -300,14 +324,12 @@ const PatientAntecedentsTab: React.FC = () => {
         isLoading={isSaving}
       />
 
-      {/* Delete Confirmation Dialog */}
       <AlertDialog open={deleteDialogOpen} onOpenChange={setDeleteDialogOpen}>
         <AlertDialogContent>
           <AlertDialogHeader>
             <AlertDialogTitle>Supprimer cet antécédent ?</AlertDialogTitle>
             <AlertDialogDescription>
-              Cette action est irréversible. L'antécédent "{antecedentToDelete?.title}" 
-              sera définitivement supprimé du dossier patient.
+              L'antécédent "{antecedentToDelete?.title}" sera définitivement supprimé.
             </AlertDialogDescription>
           </AlertDialogHeader>
           <AlertDialogFooter>
@@ -316,14 +338,8 @@ const PatientAntecedentsTab: React.FC = () => {
               onClick={handleConfirmDelete}
               className="bg-destructive text-destructive-foreground hover:bg-destructive/90"
             >
-              {isSaving ? (
-                <>
-                  <Loader2 className="mr-2 h-4 w-4 animate-spin" />
-                  Suppression...
-                </>
-              ) : (
-                'Supprimer'
-              )}
+              {isSaving ? <Loader2 className="mr-2 h-4 w-4 animate-spin" /> : null}
+              Supprimer
             </AlertDialogAction>
           </AlertDialogFooter>
         </AlertDialogContent>
@@ -332,7 +348,6 @@ const PatientAntecedentsTab: React.FC = () => {
   );
 };
 
-// Antecedent Item Component
 const AntecedentItem: React.FC<{
   antecedent: Antecedent;
   onDelete: () => void;
@@ -362,9 +377,6 @@ const AntecedentItem: React.FC<{
               {format(new Date(antecedent.occurrence_date), 'dd/MM/yyyy', { locale: fr })}
             </span>
           )}
-          <span>
-            Ajouté le {format(new Date(antecedent.created_at), 'dd/MM/yyyy', { locale: fr })}
-          </span>
         </div>
       </div>
 
