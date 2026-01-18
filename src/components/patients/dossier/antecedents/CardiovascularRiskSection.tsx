@@ -17,8 +17,7 @@ import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
 import { Skeleton } from '@/components/ui/skeleton';
 import { cn } from '@/lib/utils';
-import { usePatientLifestyle, type PatientLifestyle } from '@/hooks/data/useMedicalHistory';
-import { usePatientFamilyHistory } from '@/hooks/data/useMedicalHistory';
+import { usePatientLifestyle, usePatientFamilyHistory } from '@/hooks/data/useMedicalHistory';
 
 interface CardiovascularRiskSectionProps {
   patientId: string;
@@ -30,7 +29,6 @@ interface RiskFactor {
   status: 'present' | 'absent' | 'unknown';
   details?: string;
   icon: React.ElementType;
-  severity?: 'low' | 'medium' | 'high';
 }
 
 const CardiovascularRiskSection: React.FC<CardiovascularRiskSectionProps> = ({ patientId }) => {
@@ -78,7 +76,6 @@ const CardiovascularRiskSection: React.FC<CardiovascularRiskSectionProps> = ({ p
         ? `Actif${tobaccoData.tobaccoPackYears ? ` - ${tobaccoData.tobaccoPackYears} PA` : ''}`
         : tobaccoData?.status === 'former' ? 'Ancien fumeur' : undefined,
       icon: Cigarette,
-      severity: tobaccoData?.status === 'current' ? 'high' : tobaccoData?.status === 'former' ? 'medium' : undefined,
     },
     {
       id: 'sedentary',
@@ -90,7 +87,6 @@ const CardiovascularRiskSection: React.FC<CardiovascularRiskSectionProps> = ({ p
         ? `${activityData.activityFrequencyPerWeek}x/sem` 
         : undefined,
       icon: Activity,
-      severity: activityData?.status === 'never' ? 'medium' : undefined,
     },
     {
       id: 'family',
@@ -101,7 +97,6 @@ const CardiovascularRiskSection: React.FC<CardiovascularRiskSectionProps> = ({ p
         ? cvFamilyHistory.map(f => f.conditionTitle).join(', ').substring(0, 50) 
         : undefined,
       icon: Users,
-      severity: cvFamilyHistory.length > 0 ? 'medium' : undefined,
     },
     {
       id: 'alcohol',
@@ -114,7 +109,6 @@ const CardiovascularRiskSection: React.FC<CardiovascularRiskSectionProps> = ({ p
         ? `${alcoholData.alcoholGlassesPerWeek} verres/sem` 
         : undefined,
       icon: AlertTriangle,
-      severity: alcoholData?.alcoholGlassesPerWeek && alcoholData.alcoholGlassesPerWeek > 21 ? 'high' : undefined,
     },
   ];
 
