@@ -155,7 +155,7 @@ const PatientAntecedentsTab: React.FC = () => {
         {/* Main Column */}
         <div className="lg:col-span-2 space-y-6">
           {/* Perinatal Section (conditional) */}
-          <PerinatalSection patientId={patient.id} dateOfBirth={patient.date_of_birth} />
+          <PerinatalSection patientId={patient.id} dateOfBirth={patient.dateOfBirth instanceof Date ? patient.dateOfBirth.toISOString() : patient.dateOfBirth} />
 
           {/* Allergies Section */}
           <PatientAllergyManager patientId={patient.id} />

@@ -258,10 +258,25 @@ const FamilyHistorySection: React.FC<FamilyHistorySectionProps> = ({ patientId }
             <div className="space-y-2">
               <Label>Pathologie / Condition *</Label>
               <SmartSearchInput
-                value={formData.conditionTitle || ''}
-                onValueChange={(value) => setFormData({ ...formData, conditionTitle: value })}
-                onTerminologySelect={handleTerminologySelect}
+                category="condition"
                 placeholder="Rechercher une pathologie..."
+                onSelect={(term, freeText) => {
+                  if (term) {
+                    setFormData({
+                      ...formData,
+                      conditionTitle: term.display,
+                      terminologyCode: term.code,
+                      terminologySystem: term.system,
+                    });
+                  } else if (freeText) {
+                    setFormData({
+                      ...formData,
+                      conditionTitle: freeText,
+                      terminologyCode: undefined,
+                      terminologySystem: undefined,
+                    });
+                  }
+                }}
               />
               {formData.terminologyCode && (
                 <p className="text-xs text-muted-foreground">
